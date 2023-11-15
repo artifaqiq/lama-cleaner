@@ -1,0 +1,1 @@
+"C:\Users\Administrator\AppData\Local\Programs\Python\Python39\python.exe" "C:\Program Files\LamaCleaner\main.py"

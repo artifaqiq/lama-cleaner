@@ -227,7 +227,7 @@ def process():
     original_shape = image.shape
     interpolation = cv2.INTER_CUBIC
 
-    form = request.form
+    params = _build_inpaint_params(request.form)
     size_limit = max(image.shape)
 
     if "paintByExampleImage" in input:
@@ -239,41 +239,41 @@ def process():
         paint_by_example_example_image = None
 
     config = Config(
-        ldm_steps=form["ldmSteps"],
-        ldm_sampler=form["ldmSampler"],
-        hd_strategy=form["hdStrategy"],
-        zits_wireframe=form["zitsWireframe"],
-        hd_strategy_crop_margin=form["hdStrategyCropMargin"],
-        hd_strategy_crop_trigger_size=form["hdStrategyCropTrigerSize"],
-        hd_strategy_resize_limit=form["hdStrategyResizeLimit"],
-        prompt=form["prompt"],
-        negative_prompt=form["negativePrompt"],
-        use_croper=form["useCroper"],
-        croper_x=form["croperX"],
-        croper_y=form["croperY"],
-        croper_height=form["croperHeight"],
-        croper_width=form["croperWidth"],
-        sd_scale=form["sdScale"],
-        sd_mask_blur=form["sdMaskBlur"],
-        sd_strength=form["sdStrength"],
-        sd_steps=form["sdSteps"],
-        sd_guidance_scale=form["sdGuidanceScale"],
-        sd_sampler=form["sdSampler"],
-        sd_seed=form["sdSeed"],
-        sd_match_histograms=form["sdMatchHistograms"],
-        cv2_flag=form["cv2Flag"],
-        cv2_radius=form["cv2Radius"],
-        paint_by_example_steps=form["paintByExampleSteps"],
-        paint_by_example_guidance_scale=form["paintByExampleGuidanceScale"],
-        paint_by_example_mask_blur=form["paintByExampleMaskBlur"],
-        paint_by_example_seed=form["paintByExampleSeed"],
-        paint_by_example_match_histograms=form["paintByExampleMatchHistograms"],
+        ldm_steps=params["ldmSteps"],
+        ldm_sampler=params["ldmSampler"],
+        hd_strategy=params["hdStrategy"],
+        zits_wireframe=params["zitsWireframe"],
+        hd_strategy_crop_margin=params["hdStrategyCropMargin"],
+        hd_strategy_crop_trigger_size=params["hdStrategyCropTrigerSize"],
+        hd_strategy_resize_limit=params["hdStrategyResizeLimit"],
+        prompt=params["prompt"],
+        negative_prompt=params["negativePrompt"],
+        use_croper=params["useCroper"],
+        croper_x=params["croperX"],
+        croper_y=params["croperY"],
+        croper_height=params["croperHeight"],
+        croper_width=params["croperWidth"],
+        sd_scale=params["sdScale"],
+        sd_mask_blur=params["sdMaskBlur"],
+        sd_strength=params["sdStrength"],
+        sd_steps=params["sdSteps"],
+        sd_guidance_scale=params["sdGuidanceScale"],
+        sd_sampler=params["sdSampler"],
+        sd_seed=params["sdSeed"],
+        sd_match_histograms=params["sdMatchHistograms"],
+        cv2_flag=params["cv2Flag"],
+        cv2_radius=params["cv2Radius"],
+        paint_by_example_steps=params["paintByExampleSteps"],
+        paint_by_example_guidance_scale=params["paintByExampleGuidanceScale"],
+        paint_by_example_mask_blur=params["paintByExampleMaskBlur"],
+        paint_by_example_seed=params["paintByExampleSeed"],
+        paint_by_example_match_histograms=params["paintByExampleMatchHistograms"],
         paint_by_example_example_image=paint_by_example_example_image,
-        p2p_steps=form["p2pSteps"],
-        p2p_image_guidance_scale=form["p2pImageGuidanceScale"],
-        p2p_guidance_scale=form["p2pGuidanceScale"],
-        controlnet_conditioning_scale=form["controlnet_conditioning_scale"],
-        controlnet_method=form["controlnet_method"],
+        p2p_steps=params["p2pSteps"],
+        p2p_image_guidance_scale=params["p2pImageGuidanceScale"],
+        p2p_guidance_scale=params["p2pGuidanceScale"],
+        controlnet_conditioning_scale=params["controlnet_conditioning_scale"],
+        controlnet_method=params["controlnet_method"],
     )
 
     if config.sd_seed == -1:
@@ -524,6 +524,45 @@ def build_plugins(args):
         logger.info(f"Initialize GIF plugin")
         plugins[MakeGIF.name] = MakeGIF()
 
+
+def _build_inpaint_params(form):
+    default_params = {
+        "ldmSteps": "25",
+        "ldmSampler": "plms",
+        "zitsWireframe": "true",
+        "hdStrategy": "Crop",
+        "hdStrategyCropMargin": "196",
+        "hdStrategyCropTrigerSize": "800",
+        "hdStrategyResizeLimit": "2048",
+        "prompt": "",
+        "negativePrompt": "",
+        "croperX": "384",
+        "croperY": "207",
+        "croperHeight": "512",
+        "croperWidth": "512",
+        "useCroper": "false",
+        "sdMaskBlur": "5",
+        "sdStrength": "0.75",
+        "sdSteps": "50",
+        "sdGuidanceScale": "7.5",
+        "sdSampler": "uni_pc",
+        "sdSeed": "-1",
+        "sdMatchHistograms": "false",
+        "sdScale": "1",
+        "cv2Radius": "5",
+        "cv2Flag": "INPAINT_NS",
+        "paintByExampleSteps": "50",
+        "paintByExampleGuidanceScale": "7.5",
+        "paintByExampleSeed": "-1",
+        "paintByExampleMaskBlur": "5",
+        "paintByExampleMatchHistograms": "false",
+        "p2pSteps": "50",
+        "p2pImageGuidanceScale": "1.5",
+        "p2pGuidanceScale": "7.5",
+        "controlnet_conditioning_scale": "0.4",
+        "controlnet_method": "control_v11p_sd15_canny",
+    }
+    return {**default_params, **form}
 
 def main(args):
     global model
