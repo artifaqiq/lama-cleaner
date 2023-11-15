@@ -1,1 +1,1 @@
-"C:\Users\Administrator\AppData\Local\Programs\Python\Python39\python.exe" "C:\Program Files\LamaCleaner\main.py"
+"C:\Users\Administrator\AppData\Local\Programs\Python\Python39\python.exe" "C:\Program Files\LamaCleaner\main.py" --host 192.168.0.200

@@ -222,6 +222,7 @@ def process():
     mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)[1]
 
     if image.shape[:2] != mask.shape[:2]:
+        logger.info(f"Image.shape: {image.shape} mask.shape: {mask.shape}")
         return (
             f"Mask shape{mask.shape[:2]} not queal to Image shape{image.shape[:2]}",
             400,
