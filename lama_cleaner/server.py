@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 import hashlib
 
@@ -210,6 +211,8 @@ def media_thumbnail_file(tab, filename):
 
 @app.route("/inpaint", methods=["POST"])
 def process():
+    logger.info(f"Request files: {json.dumps(request.files)}")
+    logger.info(f"Request form: {json.dumps(request.form)}")
     input = request.files
     # RGB
     origin_image_bytes = input["image"].read()
